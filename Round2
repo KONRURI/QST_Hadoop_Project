@@ -1,0 +1,39 @@
+方案设计:
+1.	统计每日、周、月的UV数量
+Combiner处理日志数据
+利用正则表达式拆分数据，保留IP地址，访问时间，将保留数据保存到set集合当中
+Map：key:ip  value:时间
+Reduce：set集合去重IP
+2.	统计每日的PV量
+Combiner处理日志数据
+正则表达式拆分数据 得到IP地址，和访问时间
+Map:Key：时间	 value:IP地址
+Reduce：进行统计操作 统计出的value总数即为PV
+3.	统计次日留存、次月留存
+Map：key:IP地址 value:文件名 将需对比的文件一起输入Map
+Reduce：定义一个计数器 遍历value
+若是在两文件中都存在的IP 则count+1
+
+4.	统计每类网页的跳转率
+Map:利用正则表达式拆分出IP value为show或musician
+Reduce:统计出只存在一次的IP 将其输出
+输出的IP除以UV总数即为跳转率
+5.	统计每天从baidu跳转过来的PV
+Map：正则表达式拆分数据 得到跳转的IP 即为key value为1
+Reduce:统计出value数目
+输出的数目即为baidu跳转的PV
+6.	统计每天IOS和Android的UV数
+Map:利用正则表达式拆分数据 截取ios Android用户作为Key ip为value
+Reduce：set集合去重数据 计算数量
+统计出的数量即为UV
+实时的查询服务需求:
+1.	查询当前的show的访问数量
+将show放进hbase中进行存储 ，直接从hbase中查询访问数量
+2.	查询当前的musician的访问数量
+将musician的访问数量放进habse中进行存储，直接从hbase中查询访问数量
+
+项目拆解:
+1.	12月9日完成项目方案设计
+2.	12月 10日完成 UV PV统计
+3.	12月11-12日完善UV PV统计（若有BUG） 完成留存统计
+4.	12月13-15日完成跳转率 IOS Android UV数及实时查询
